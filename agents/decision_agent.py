@@ -1,17 +1,40 @@
 import requests
 from core.memory import load_memory
+import os
 
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 
-def call_ollama(prompt, model="llama3.2"):
+def call_llm(prompt, model="llama3.2"):
+    api_key = os.getenv("GROQ_API_KEY")
+
+    if api_key:
+        try:
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": "llama-3.2-3b-preview",
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.7,
+            }
+            response = requests.post(
+                GROQ_API_URL, headers=headers, json=payload, timeout=30
+            )
+            if response.status_code == 200:
+                return response.json()["choices"][0]["message"]["content"]
+        except Exception as e:
+            pass
+
     try:
         response = requests.post(
             OLLAMA_URL,
             json={"model": model, "prompt": prompt, "stream": False},
             timeout=30,
-        ).json()
-        return response.get("response")
+        )
+        return response.json().get("response")
     except:
         return None
 
@@ -47,17 +70,17 @@ Past decisions:
 
 Make a decision considering BOTH market data and sentiment.
 
-Output:
+Output ONLY this format:
 Decision: BUY / SELL / HOLD
-Reason: clear explanation
+Reason: one sentence explanation
 Confidence: percentage (0-100)"""
 
-    output = call_ollama(prompt)
+    output = call_llm(prompt)
 
     if output is None:
         output = f"""
 Decision: HOLD
-Reason: Running in cloud mode without local LLM. Based on trend ({market["trend"]}) and sentiment ({sentiment["sentiment"]}), taking cautious stance.
+Reason: Based on trend ({market["trend"]}) and sentiment ({sentiment["sentiment"]}), taking cautious stance.
 Confidence: 60
 """
 
