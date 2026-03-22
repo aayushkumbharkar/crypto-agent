@@ -6,6 +6,7 @@ if __name__ == "__main__":
     result = run_agent()
 
     print("\n=== AI Decision ===")
-    print(f"Decision: {result['decision']}")
-    print(f"Reason: {result['reason']}")
-    print(f"Confidence: {result['confidence']}%")
+    print(result["decision"])
+
+    print("\n=== Critic Review ===")
+    print(result["critique"])
