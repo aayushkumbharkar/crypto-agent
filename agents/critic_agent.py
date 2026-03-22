@@ -8,14 +8,13 @@ def critique(decision_text):
 
 {decision_text}
 
-Answer:
-- Is the reasoning strong?
-- What could be improved?
-- Suggest a better version if possible."""
+Give:
+- Strengths
+- Weaknesses
+- What should be done differently next time (IMPORTANT)"""
 
     response = requests.post(
         OLLAMA_URL, json={"model": "llama3.2", "prompt": prompt, "stream": False}
-    )
+    ).json()
 
-    data = response.json()
-    return data.get("response", "Error generating critique")
+    return response.get("response", "Error generating critique")

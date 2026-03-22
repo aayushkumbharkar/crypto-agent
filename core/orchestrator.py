@@ -11,6 +11,8 @@ def run_agent(coin="bitcoin"):
     decision = make_decision(market, risk)
     review = critique(decision["raw_output"])
 
-    save_memory({"market": market, "decision": decision, "critique": review})
+    save_memory(
+        {"market": market, "decision": decision["raw_output"], "critique": review}
+    )
 
     return {"decision": decision["raw_output"], "critique": review}
