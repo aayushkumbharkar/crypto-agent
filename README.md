@@ -79,7 +79,7 @@ Features:
 
 ## 🚀 Live Demo
 
-👉 https://crypto-agent.streamlit.app
+👉 https://cryptoo-agent.streamlit.app
 
 ## 🛠️ Tech Stack
 
