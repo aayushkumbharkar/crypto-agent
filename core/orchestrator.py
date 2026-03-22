@@ -7,7 +7,7 @@ from core.memory import save_memory
 
 
 def run_agent(coin="bitcoin"):
-    market = analyze_market()
+    market = analyze_market(coin)
     sentiment = analyze_sentiment(coin)
     risk = assess_risk(market)
 

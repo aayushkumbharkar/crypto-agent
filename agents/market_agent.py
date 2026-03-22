@@ -1,12 +1,14 @@
 import requests
 
 
-def analyze_market():
-    url = "https://api.coingecko.com/api/v3/coins/bitcoin"
-    data = requests.get(url).json()
+def analyze_market(coin="bitcoin"):
+    url = f"https://api.coingecko.com/api/v3/simple/price"
+    params = {"ids": coin, "vs_currencies": "usd", "include_24hr_change": "true"}
+    data = requests.get(url, params=params).json()
 
-    price = data["market_data"]["current_price"]["usd"]
-    change = data["market_data"]["price_change_percentage_24h"]
+    coin_data = data.get(coin, {})
+    price = coin_data.get("usd", 0)
+    change = coin_data.get("usd_24h_change", 0)
 
     trend = "up" if change > 0 else "down"
 
