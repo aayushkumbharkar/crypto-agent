@@ -1,41 +1,38 @@
 import requests
-from core.memory import load_memory
 import os
+import streamlit as st
+from core.memory import load_memory
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-OLLAMA_URL = "http://localhost:11434/api/generate"
 
 
-def call_llm(prompt, model="llama3.2"):
-    api_key = os.getenv("GROQ_API_KEY")
+def call_groq(prompt, model="llama-3.2-3b-preview"):
+    api_key = os.getenv("GROQ_API_KEY", "")
 
-    if api_key:
+    if not api_key or api_key == "your-groq-key-here":
         try:
-            headers = {
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            }
-            payload = {
-                "model": "llama-3.2-3b-preview",
-                "messages": [{"role": "user", "content": prompt}],
-                "temperature": 0.7,
-            }
-            response = requests.post(
-                GROQ_API_URL, headers=headers, json=payload, timeout=30
-            )
-            if response.status_code == 200:
-                return response.json()["choices"][0]["message"]["content"]
-        except Exception as e:
-            pass
+            api_key = st.secrets["GROQ_API_KEY"]
+        except:
+            return None
 
     try:
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.7,
+        }
         response = requests.post(
-            OLLAMA_URL,
-            json={"model": model, "prompt": prompt, "stream": False},
-            timeout=30,
+            GROQ_API_URL, headers=headers, json=payload, timeout=60
         )
-        return response.json().get("response")
-    except:
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"]
+        else:
+            return None
+    except Exception as e:
         return None
 
 
@@ -75,7 +72,7 @@ Decision: BUY / SELL / HOLD
 Reason: one sentence explanation
 Confidence: percentage (0-100)"""
 
-    output = call_llm(prompt)
+    output = call_groq(prompt)
 
     if output is None:
         output = f"""
