@@ -18,8 +18,10 @@ st.markdown("""
 - 🔍 Critic-based optimization  
 """)
 
-coin = st.text_input("Enter Coin (bitcoin, ethereum, solana)", "bitcoin")
-days = st.selectbox("Select timeframe (days)", [1, 7, 30], index=1)
+coin_options = ["bitcoin", "ethereum", "solana", "dogecoin", "cardano"]
+coin = st.selectbox("Select Coin", coin_options, index=0)
+
+days = st.slider("Select timeframe (days)", 1, 90, 7)
 
 if st.button("Analyze Market"):
     with st.spinner("Analyzing market with AI agents..."):
@@ -27,7 +29,6 @@ if st.button("Analyze Market"):
 
     st.success("Analysis Complete")
 
-    # Metrics
     col1, col2, col3, col4 = st.columns(4)
 
     decision_text = result["decision"]
@@ -39,14 +40,11 @@ if st.button("Analyze Market"):
 
     sentiment_text = result["sentiment"]["sentiment"].upper()
 
-    col1.metric(
-        "Signal", signal, "📊" if signal == "BUY" else "📉" if signal == "SELL" else "⏸️"
-    )
-    col2.metric("Sentiment", sentiment_text, "🌐")
+    col1.metric("Signal", signal)
+    col2.metric("Sentiment", sentiment_text)
     col3.metric("Score", f"{result['sentiment']['score']:.0%}")
     col4.metric("Timeframe", f"{days} days")
 
-    # Signal Badge
     if signal == "BUY":
         st.success("🟢 BUY Signal")
     elif signal == "SELL":
@@ -54,7 +52,6 @@ if st.button("Analyze Market"):
     else:
         st.warning("🟡 HOLD Signal")
 
-    # Sentiment Section
     st.markdown("## 🌐 Market Sentiment")
     sent = result["sentiment"]["sentiment"]
     if sent == "positive":
@@ -71,17 +68,16 @@ if st.button("Analyze Market"):
     st.markdown("## 🔍 Critic Review")
     st.code(result["critique"], language="text")
 
-    # Price Chart
     st.markdown("## 📈 Price Trend")
     with st.spinner("Loading chart..."):
         chart_data = get_market_chart(coin, days)
 
-    if chart_data:
+    if chart_data and len(chart_data) > 0:
         df = pd.DataFrame(chart_data, columns=["timestamp", "price"])
         df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
         st.line_chart(df.set_index("timestamp"))
     else:
-        st.warning("Could not load chart data")
+        st.warning("Could not load chart data. API rate limit may be active.")
 
 st.sidebar.title("📊 Memory (Last Decisions)")
 memory = load_memory()
