@@ -1,6 +1,6 @@
 # 🚀 CryptoPilot AI
 
-**Multi-Agent Crypto Decision Intelligence System**
+Multi-Agent Crypto Decision Intelligence System
 
 CryptoPilot AI is a multi-agent system that analyzes cryptocurrency markets using price trends, risk modeling, sentiment analysis, and LLM-based reasoning to generate trading decisions.
 
@@ -40,14 +40,31 @@ Memory → Stores decisions for learning
 
 ## 🤖 Agents
 
-| Agent | Description |
-|-------|-------------|
-| 📊 Market Agent | Fetches real-time crypto price data, identifies short-term trend |
-| 🌐 Sentiment Agent | Analyzes market sentiment (positive/neutral/negative) |
-| ⚠️ Risk Agent | Classifies market risk (low/medium/high) |
-| 🧠 Decision Agent | Uses LLM to generate Decision, Reason, Confidence |
-| 🔍 Critic Agent | Reviews decision quality, suggests improvements |
-| 🖥️ Memory Module | Stores past decisions with timestamps for learning |
+### 📊 Market Agent
+Fetches real-time crypto price data
+Identifies short-term trend
+
+### 🌐 Sentiment Agent
+Analyzes market sentiment (positive / neutral / negative)
+Influences final decision
+
+### ⚠️ Risk Agent
+Classifies market risk (low / medium / high)
+
+### 🧠 Decision Agent (LLM)
+Uses structured prompts to generate:
+- Decision
+- Reason
+- Confidence
+
+### 🔍 Critic Agent
+Reviews decision quality
+Suggests improvements
+Adds explainability layer
+
+### 🖥️ Memory Module
+Stores past decisions with timestamps
+Enables future learning & tracking
 
 ## 🖥️ UI (Streamlit)
 
@@ -59,9 +76,8 @@ Features:
 - Critic feedback
 - Sentiment indicator
 - Memory sidebar (recent decisions)
-- Live price charts
 
-## 🌐 Live Demo
+## 🚀 Live Demo
 
 👉 https://crypto-agent.streamlit.app
 
@@ -69,35 +85,38 @@ Features:
 
 - Python
 - Streamlit
-- Ollama (Local LLM) / Groq API (Cloud LLM)
+- Ollama (Local LLM) / Groq (Cloud LLM)
 - Requests
 - Modular Multi-Agent Architecture
 
 ## ⚡ Running Locally
 
+1. Clone repo
 ```bash
-# 1. Clone repo
 git clone https://github.com/aayushkumbharkar/crypto-agent.git
 cd crypto-agent
+```
 
-# 2. Install dependencies
+2. Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
-# 3. Start Ollama (for LLM)
+3. Start Ollama (for LLM)
+```bash
 ollama run llama3.2
+```
 
-# 4. Run app
+4. Run app
+```bash
 streamlit run app.py
 ```
 
-## 🔐 Environment Variables
+## 🌐 Deployment Notes
 
-Create a `.env` file for local development:
-
-```
-GROQ_API_KEY=your-groq-api-key  # Optional: for cloud LLM
-OPENAI_API_KEY=your-openai-key  # Optional: alternative LLM
-```
+- Streamlit Cloud used for frontend hosting
+- Local LLM (Ollama) replaced with Groq API for cloud
+- Full LLM capability available in local environment
 
 ## 🧪 Example Output
 
@@ -105,12 +124,13 @@ OPENAI_API_KEY=your-openai-key  # Optional: alternative LLM
 Decision: SELL  
 Reason: Downward trend + negative sentiment indicates potential further decline  
 Confidence: 80%
-```
 
-**Critic Review:**
-- Strengths: Clear reasoning based on data
-- Weaknesses: Could quantify risk more
-- Improvement: Add specific entry/exit points
+Critic Review:
+
+Strong reasoning
+Suggests adding risk quantification
+Recommends identifying triggers
+```
 
 ## 🔥 What Makes This Different
 
@@ -119,7 +139,6 @@ Confidence: 80%
 - Built-in self-critique loop
 - Explainable AI decisions
 - Modular & extensible architecture
-- Self-improving memory system
 
 ## 🧭 Future Improvements
 
@@ -128,8 +147,3 @@ Confidence: 80%
 - Portfolio optimization agent
 - Autonomous trading execution
 - On-chain data integration
-- Multi-coin portfolio analysis
-
-## 📄 License
-
-MIT License
