@@ -4,7 +4,7 @@ from core.memory import load_memory
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 
-def make_decision(market, risk):
+def make_decision(market, risk, sentiment):
     past = load_memory()
 
     memory_context = (
@@ -17,18 +17,23 @@ def make_decision(market, risk):
         or "No past decisions yet."
     )
 
-    prompt = f"""You are a self-improving crypto trading AI.
+    prompt = f"""You are an expert crypto trading AI.
 
-Past decisions and critiques:
+Market Data:
+- Price: ${market["price"]}
+- 24h Change: {market["change_24h"]}%
+- Trend: {market["trend"]}
+
+Risk Level: {risk}
+
+Sentiment Analysis:
+- Sentiment: {sentiment["sentiment"]}
+- Score: {sentiment["score"]}
+
+Past decisions:
 {memory_context}
 
-Current Market:
-- Price: ${market["price"]}
-- Change: {market["change_24h"]}%
-- Trend: {market["trend"]}
-- Risk: {risk}
-
-Learn from past mistakes and improve.
+Make a decision considering BOTH market data and sentiment.
 
 Output:
 Decision: BUY / SELL / HOLD

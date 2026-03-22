@@ -13,6 +13,7 @@ st.markdown("""
 ### Features:
 - 📈 Real-time market analysis  
 - 🤖 Multi-agent reasoning system  
+- 🌐 Sentiment intelligence  
 - 🧠 Self-improving memory  
 - 🔍 Critic-based optimization  
 """)
@@ -27,9 +28,8 @@ if st.button("Analyze Market"):
     st.success("Analysis Complete")
 
     # Metrics
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
-    # Parse decision for metrics
     decision_text = result["decision"]
     signal = "HOLD"
     if "BUY" in decision_text:
@@ -37,15 +37,14 @@ if st.button("Analyze Market"):
     elif "SELL" in decision_text:
         signal = "SELL"
 
-    trend = "Analyzing..."
-    if "Trend:" in decision_text:
-        trend = decision_text.split("Trend:")[-1].split()[0]
+    sentiment_text = result["sentiment"]["sentiment"].upper()
 
     col1.metric(
         "Signal", signal, "📊" if signal == "BUY" else "📉" if signal == "SELL" else "⏸️"
     )
-    col2.metric("Trend", trend)
-    col3.metric("Timeframe", f"{days} days")
+    col2.metric("Sentiment", sentiment_text, "🌐")
+    col3.metric("Score", f"{result['sentiment']['score']:.0%}")
+    col4.metric("Timeframe", f"{days} days")
 
     # Signal Badge
     if signal == "BUY":
@@ -54,6 +53,17 @@ if st.button("Analyze Market"):
         st.error("🔴 SELL Signal")
     else:
         st.warning("🟡 HOLD Signal")
+
+    # Sentiment Section
+    st.markdown("## 🌐 Market Sentiment")
+    sent = result["sentiment"]["sentiment"]
+    if sent == "positive":
+        st.success("🟢 Positive Sentiment")
+    elif sent == "negative":
+        st.error("🔴 Negative Sentiment")
+    else:
+        st.warning("🟡 Neutral Sentiment")
+    st.caption(f"Sentiment Score: {result['sentiment']['score']}")
 
     st.markdown("## 🧠 AI Decision")
     st.code(decision_text, language="text")
