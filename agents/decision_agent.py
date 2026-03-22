@@ -21,7 +21,7 @@ def call_groq(prompt):
             "Content-Type": "application/json",
         }
         payload = {
-            "model": "llama-3.2-3b",
+            "model": "llama-3.1-8b-instant",
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.7,
         }
