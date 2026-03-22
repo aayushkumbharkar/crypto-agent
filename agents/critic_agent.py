@@ -5,7 +5,7 @@ import streamlit as st
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
-def call_groq(prompt, model="llama-3.2-3b-preview"):
+def call_groq(prompt):
     api_key = os.getenv("GROQ_API_KEY", "")
 
     if not api_key or api_key == "your-groq-key-here":
@@ -20,7 +20,7 @@ def call_groq(prompt, model="llama-3.2-3b-preview"):
             "Content-Type": "application/json",
         }
         payload = {
-            "model": model,
+            "model": "llama-3.2-3b",
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.7,
         }
