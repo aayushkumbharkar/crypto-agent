@@ -4,6 +4,18 @@ from core.memory import load_memory
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 
+def call_ollama(prompt, model="llama3.2"):
+    try:
+        response = requests.post(
+            OLLAMA_URL,
+            json={"model": model, "prompt": prompt, "stream": False},
+            timeout=30,
+        ).json()
+        return response.get("response")
+    except:
+        return None
+
+
 def make_decision(market, risk, sentiment):
     past = load_memory()
 
@@ -40,8 +52,13 @@ Decision: BUY / SELL / HOLD
 Reason: clear explanation
 Confidence: percentage (0-100)"""
 
-    response = requests.post(
-        OLLAMA_URL, json={"model": "llama3.2", "prompt": prompt, "stream": False}
-    ).json()
+    output = call_ollama(prompt)
 
-    return {"raw_output": response.get("response", "Error generating response")}
+    if output is None:
+        output = f"""
+Decision: HOLD
+Reason: Running in cloud mode without local LLM. Based on trend ({market["trend"]}) and sentiment ({sentiment["sentiment"]}), taking cautious stance.
+Confidence: 60
+"""
+
+    return {"raw_output": output}
